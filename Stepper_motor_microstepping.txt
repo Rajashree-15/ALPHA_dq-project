@@ -1,0 +1,260 @@
+/*
+ * main.c
+ *
+ *  Created on: 30-May-2022
+ *      Author: Rajashree
+ */
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdbool.h>
+#include <util/delay.h>
+#include "PWM.h"
+int main (void)
+{
+	uint8_t duty;
+	int duty_count=1,step=1;
+	PWM_init();
+	while(1)
+{
+   while(step==1)
+	{
+		duty_count++;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+	   //code for non inverted pwm
+		PWM1_NonInv();
+		PWM2_Inv();
+		PWM3_NonInv_PWM4_Inv();
+		//PWM_duty(duty_count);
+		if(duty_count>5)
+		{
+			step++;
+			duty_count=5;
+			break;
+		}
+		OCR1B = 0xFF;//PWM1
+		OCR0B = duty;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+	}
+
+	while(step==2)
+		{
+		duty_count--;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		if(duty_count<1)
+		{
+		step++;
+		duty_count=1;
+		break;
+		}
+		PWM1_NonInv();
+		PWM2_Inv();
+		PWM3_NonInv_PWM4_Inv();
+		if(duty_count==1)
+		{
+
+		PWM1_Inv();
+		duty=0xFF;
+		}
+
+		OCR1B = duty;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+		}
+	while(step==3)
+		{
+		duty_count++;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		PWM1_Inv();
+		PWM2_NonInv();
+		PWM3_NonInv_PWM4_Inv();
+		if(duty_count>5)
+			{
+			step++;
+			duty_count=5;
+			break;
+			}
+		OCR1B = 0xFF;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = duty;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+}
+	while(step==4)
+			{
+		duty_count--;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		if(duty_count<1)
+		{
+		step++;
+		duty_count=1;
+		break;
+		}
+		PWM1_Inv();
+		PWM2_NonInv();
+		PWM3_NonInv_PWM4_Inv();
+		if(duty_count==1)
+		{
+		PWM4_Inv_PWM3_Inv();
+		duty=0xFF;
+		}
+		OCR1B = 0xFF;//PWM1
+		OCR0B = duty;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+		}
+	while(step==5)
+		{
+		duty_count++;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		PWM1_Inv();
+		PWM2_NonInv();
+		PWM4_NonInv_PWM3_Inv();
+		if(duty_count>5)
+			{
+			step++;
+			duty_count=5;
+			break;
+			}
+		OCR1B = 0xFF;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = duty;//PWM4
+		_delay_ms(10);
+			}
+	while(step==6)
+	{
+		duty_count--;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		if(duty_count<1)
+		{
+		step++;
+		duty_count=1;
+		break;
+		}
+		PWM1_Inv();
+		PWM2_NonInv();
+		PWM4_NonInv_PWM3_Inv();
+
+		if(duty_count==1)
+		{
+		PWM2_Inv();
+		duty=0xFF;
+		}
+		OCR1B = 0xFF;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = duty;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+
+}
+	while(step==7)
+			{
+		duty_count++;
+		if (duty_count==2)
+			duty=0x3F;//25%
+		if (duty_count==3)
+			duty=0X7F;//50%
+		if (duty_count==4)
+			duty=0xBF;//75%
+		if (duty_count==5)
+			duty=0xFF;//100%
+		PWM1_NonInv();
+		PWM2_Inv();
+		PWM4_NonInv_PWM3_Inv();
+	   if(duty_count>5)
+		{
+		step++;
+		duty_count=5;
+		break;
+		}
+		OCR1B = duty;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = 0xFF;//PWM4
+		_delay_ms(10);
+		}
+		while(step==8)
+	{
+	duty_count--;
+	if (duty_count==2)
+		duty=0x3F;//25%
+	if (duty_count==3)
+		duty=0X7F;//50%
+	if (duty_count==4)
+		duty=0xBF;//75%
+	if (duty_count==5)
+		duty=0xFF;//100%
+	if(duty_count<1)
+		{
+		step=1;
+		duty_count=1;
+		break;
+		}
+		PWM1_NonInv();
+		PWM2_Inv();
+		PWM4_NonInv_PWM3_Inv();
+		if(duty_count==1)
+		{
+	    PWM4_Inv_PWM3_Inv();
+		duty=0xFF;
+	    }
+		OCR1B = 0xFF;//PWM1
+		OCR0B = 0xFF;//PWM3
+		OCR2B = 0xFF;//PWM2
+		OCR0A = duty;//PWM4
+		_delay_ms(10);
+	}
+}
+}
+
+
+
+
+
